@@ -1,9 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
 import swal from "sweetalert2";
-// import { withRouter } from "react-router-dom";
-// import { useHistory } from "react-router-dom";
-
 import Navbar from "../../../layouts/client/Navbar";
 import WithRouter from "../../../WithRouter";
 
@@ -19,7 +16,6 @@ class Register extends Component {
                 email: "",
                 address: "",
                 password: "",
-                error_list: [],
             },
         };
         // this.onHandlerClick = this.onHandlerClick.bind(this);
@@ -37,14 +33,15 @@ class Register extends Component {
             axios
                 .post(`/register`, this.state.registerData)
                 .then((response) => {
-
+                    console.log('res', response)
                     if (response.status === 200) {
-                        localStorage.setItem('auth_token', response.data.token);
-                        localStorage.setItem('auth_user', response.data.user);
+                        localStorage.getItem('auth_token', response.data.data.token);
+                        localStorage.getItem('auth_user', response.data.data.user.email);
 
                         swal.fire({
                             icon: 'success',
                             title: response.data.message,
+                            text: 'Welcome to our business, and thank you for your supporting!',
                             showConfirmButton: false,
                             timer: 1500
                         })
