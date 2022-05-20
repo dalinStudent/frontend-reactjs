@@ -6,7 +6,6 @@ import WithRouter from "../../../WithRouter";
 
 class Login extends Component {
 
-    userData;
     constructor(props) {
         super(props);
         this.state = {
@@ -15,7 +14,6 @@ class Login extends Component {
                 password: "",
             },
         };
-        // this.onHandlerClick = this.onHandlerClick.bind(this);
     }
 
     onChangeHandler = (e, key) => {
@@ -26,14 +24,15 @@ class Login extends Component {
 
     onHandlerSubmit = (e) => {
         e.preventDefault();
-        // axios.get(`/sanctum/csrf-cookie`).then(response => {
             axios
                 .post(`/login`, this.state.loginData)
                 .then((response) => {
                     console.log('res', response)
-                    if (response.status === 200) {
+                    if (response.status === 200 && response.data.data.user.is_admin === 1) {
                         localStorage.setItem('auth_token', response.data.data.token);
                         localStorage.setItem('auth_user', response.data.data.user.email);
+                        localStorage.setItem('auth_name', response.data.data.user.first_name);
+                        localStorage.setItem('auth_role', response.data.data.user.is_admin);
 
                         swal.fire({
                             icon: 'success',
@@ -42,25 +41,36 @@ class Login extends Component {
                             showConfirmButton: false,
                             timer: 2500
                         })
-                        this.props.navigation.push("/");
+                        this.props.navigation("/admin/dashboard");
 
-                    } else if (response.status === 401){
+                    } else if (response.status === 200 && response.data.data.user.is_admin !== 1) {
+                        localStorage.setItem('auth_token', response.data.data.token);
+                        localStorage.setItem('auth_user', response.data.data.user.email);
+                        localStorage.setItem('auth_name', response.data.data.user.first_name);
+                        localStorage.setItem('auth_role', response.data.data.user.is_admin);
+
+                        swal.fire({
+                            icon: 'success',
+                            title: response.data.message,
+                            text: 'Welcome to our business, and thank you for your supporting!',
+                            showConfirmButton: false,
+                            timer: 2500
+                        })
+                        this.props.navigation("/");
+
+                    } else if (response.status === 401) {
                        swal.fire({
                             icon: 'warning',
                             title: response.data.message,
                             showConfirmButton: false,
                             timer: 1500
                        })
-                        this.props.navigation.push("/login");
+                        this.props.navigation("/login");
                     } else {
                         console.log('error');
                     }
                 });
-        // })
-        
-        
     }
-
 
     render() {
         return (

@@ -4,8 +4,8 @@ import Sidebar from "./Sidebar";
 import Footer from "./Footer";
 import "../../assets/admin/css/styles.css";
 import "../../assets/admin/js/scripts";
-import { Redirect, Route, Switch } from "react-router-dom";
-import routes from "../../routes/routes";
+
+import {Navigate, Outlet} from "react-router-dom";
 
 const MasterLayout = () => {
     return (
@@ -13,38 +13,23 @@ const MasterLayout = () => {
             <Navbar />
 
             <div id="layoutSidenav">
+
                 <div id="layoutSidenav_nav">
                     <Sidebar />
                 </div>
-            </div>
 
-            <div id="layoutSidenav_content">
-                <main>
+                <div id="layoutSidenav_content">
 
-                    <Switch>
-                        { routes.map((route, index) => {
-                            return (
-                                route.component && (
-                                    <Route
-                                        key={index}
-                                        path={route.path}
-                                        exact={route.exact}
-                                        name={route.name}
-                                        to={route.to}
-                                        render={(props) => (
-                                             <route.component {...props} />
-                                        )}
-                                    />
-                                )
-                            )
-                        })}
-                        <Redirect from="admin" to="/admin/dashboard" />
-                    </Switch>
-                    
-                </main>
-                <Footer />
+                    <main>
+                        <Outlet />
+                        <Navigate from="admin" to="/admin/dashboard" />
+                    </main>
+
+                    <Footer />
+                </div>
+
             </div>
         </div>
-    )
+    );
 }
 export default MasterLayout;

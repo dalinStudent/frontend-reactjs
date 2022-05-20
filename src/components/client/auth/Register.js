@@ -6,7 +6,6 @@ import WithRouter from "../../../WithRouter";
 
 class Register extends Component { 
 
-    userData;
     constructor(props) {
         super(props);
         this.state = {
@@ -16,9 +15,9 @@ class Register extends Component {
                 email: "",
                 address: "",
                 password: "",
+                errors_list: [],
             },
         };
-        // this.onHandlerClick = this.onHandlerClick.bind(this);
     }
 
     onChangeHandler = (e, key) => {
@@ -33,7 +32,6 @@ class Register extends Component {
             axios
                 .post(`/register`, this.state.registerData)
                 .then((response) => {
-                    console.log('res', response)
                     if (response.status === 200) {
                         localStorage.getItem('auth_token', response.data.data.token);
                         localStorage.getItem('auth_user', response.data.data.user.email);
@@ -45,10 +43,10 @@ class Register extends Component {
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        this.props.navigation.push("/login");
+                        this.props.navigation("/login");
 
                     } else {
-                        // this.setState({registerData, error_list: response.data.message.errors})
+                        this.setState({...this.state.registerData,errors_list: response.data.data.errors})
                     }
                 });
         // })
@@ -80,7 +78,7 @@ class Register extends Component {
                                                 className="form-control"
                                                 name="first_name" />
                                         </div>
-                                        {/* <span>{ registerData}</span> */}
+                                         <span>{this.state.registerData.errors_list.first_name}</span>
                                         <div className="form-group mb-3">
                                             <label>Last Name</label>
                                             <input
@@ -91,16 +89,18 @@ class Register extends Component {
                                                 name="last_name"
                                             />
                                         </div>
+                                        <span>{this.state.registerData.errors_list.last_name}</span>
                                         <div className="form-group mb-3">
                                             <label>Email</label>
-                                            <input t
-                                                ype="email"
+                                            <input
+                                                type="email"
                                                 onChange={this.onChangeHandler}
                                                 value={this.state.registerData.email}
                                                 className="form-control"
                                                 name="email"
                                             />
                                         </div>
+                                        <span>{this.state.registerData.errors_list.email}</span>
                                         <div className="form-group mb-3">
                                             <label>Address</label>
                                             <input
@@ -111,6 +111,7 @@ class Register extends Component {
                                                 name="address"
                                             />
                                         </div>
+                                        <span>{this.state.registerData.errors_list.address}</span>
                                         <div className="form-group mb-3">
                                             <label>Password</label>
                                             <input
@@ -121,6 +122,7 @@ class Register extends Component {
                                                 name="password"
                                             />
                                         </div>
+                                        <span>{this.state.registerData.errors_list.address}</span>
                                         {/* <div className="form-group mb-3">
                                             <label>Confirm Password</label>
                                             <input type="password" onChange={this.onHandlerInput} value={this.state.first_name} className="form-control" name="cf_password" />

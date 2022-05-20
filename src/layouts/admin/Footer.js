@@ -8,9 +8,9 @@ const Footer = () => {
                 <div className="d-flex align-items-center justify-content-between small">
                     <div className="text-muted">Copyright &copy; Your Website 2022</div>
                     <div>
-                        <Link to="#">Privacy Policy</Link>
+                        <Link to="#">University of Puthisastra</Link>
                         &middot;
-                        <Link to="#">Terms &amp; Conditions</Link>
+                        <Link to="#">Web Development &amp; Group2</Link>
                     </div>
                 </div>
             </div>
