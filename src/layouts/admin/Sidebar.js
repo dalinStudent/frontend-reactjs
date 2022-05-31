@@ -26,6 +26,22 @@ const Sidebar = () => {
                     <div className="sb-sidenav-menu-heading">Interface</div>
 
                     <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse"
+                       data-bs-target="#collapseCate" aria-expanded="false" aria-controls="collapseCate">
+                        <div className="sb-nav-link-icon"><i className="fas fa-mobile"></i></div>
+                            Category
+                        <div className="sb-sidenav-collapse-arrow"><i className="fas fa-angle-down"></i></div>
+                    </Link>
+                    <div className="collapse" id="collapseCate" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav className="sb-sidenav-menu-nested nav">
+                            <Link className="nav-link" to="/admin/categories">List all Category</Link>
+                        </nav>
+                        <nav className="sb-sidenav-menu-nested nav">
+                            <Link className="nav-link" to="/admin/categories/create">Create Category</Link>
+                        </nav>
+                    </div>
+
+                    <Link className="nav-link collapsed" to="#" data-bs-toggle="collapse"
                        data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                         <div className="sb-nav-link-icon"><i className="fas fa-mobile"></i></div>
                             Phones

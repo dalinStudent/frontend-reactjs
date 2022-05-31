@@ -3,9 +3,6 @@ import Navbar from "../../../layouts/admin/Navbar";
 import Sidebar from "../../../layouts/admin/Sidebar";
 import Footer from "../../../layouts/admin/Footer";
 import axios from "axios";
-import swal from "sweetalert2";
-import WithRouter from "../../../WithRouter";
-import { BorderAll, Dvr, ExpandLessOutlined } from "@material-ui/icons";
 import { Link, useParams } from "react-router-dom";
 
 function ViewPhone()
@@ -20,6 +17,7 @@ function ViewPhone()
     });
 
     const [loading, setLoading] = useState(true);
+    const [images, setImage] = useState([]);
     
     useEffect(() => {
 
@@ -48,7 +46,7 @@ function ViewPhone()
 
                 <div id="layoutSidenav_content">
                     <main>
-                        <div className="container mt-5 px-4">
+                        <div className="container mt-5 px-4 mb-5">
                             <div className="row">
                                 <div className="col-sm-6 col-md-4 col-lg-12">
                                     <div className="card m-auto h-100" style={{ width: '25rem' }}>
@@ -58,11 +56,12 @@ function ViewPhone()
                                                 <Link to="/admin/phones" className="btn btn-secondary float-end">Back</Link>
                                             </h3>
                                         </div>
-                                        <img src={`${phoneInput.img}`} width="500px" className="card-img-top img-fluid" />
+                                        <img src={`http://localhost:8000/${phoneInput.img}`} width="500px" className="card-img-top img-fluid" alt="" />
                                         <div className="card-body">
-                                            <h5 className="card-title"><strong>Name : </strong>{phoneInput.name}</h5>
+                                            <p className="card-title"><strong>Name : </strong>{phoneInput.name}</p>
                                             <p className="card-text"><strong>Description :</strong> {phoneInput.description}</p>
-                                            <p className="card-text"><strong>Price : </strong>{phoneInput.price} $</p>
+                                            <p className="card-text"><strong>Original Price : </strong><s>{phoneInput.original_price}</s>  $</p>
+                                            <p className="card-text"><strong>Discount Price : </strong>{phoneInput.sell_price} $</p>
                                             <Link to="#" className="btn btn-danger float-end">Delete</Link>
                                         </div>
                                     </div>

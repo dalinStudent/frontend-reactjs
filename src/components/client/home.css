@@ -1,0 +1,28 @@
+.item-container {
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2em;
+}
+
+.item-card {
+    text-align: center;
+    padding: 10px;
+    width: 300px;
+    border-radius: 5px;
+    padding: 1em;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background-color: rgb(255, 255, 255);
+}
+
+img {
+    height: 200px;
+    width: auto;
+    margin-bottom: 20px;
+}
+
+h6 {
+    text-align: left;
+    color: brown;
+}

@@ -1,24 +1,40 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import Navbar from "../../../layouts/admin/Navbar";
 import Sidebar from "../../../layouts/admin/Sidebar";
 import Footer from "../../../layouts/admin/Footer";
 import axios from "axios";
 import swal from "sweetalert2";
-import WithRouter from "../../../WithRouter";
 import { Link, useNavigate } from "react-router-dom";
 
 function CreatePhone()
 {
     let navigate = useNavigate();
 
+    const [category, setCat] = useState([]);
     const [phoneInput, setPhone] = useState({
+        category_id: '',
         name: '',
+        slug: '',
         description: '',
-        price: '',
-    });
+        sell_price: '',
+        original_price: '',
+        quantity: '',
 
-    const [images, setImage] = useState([]);
+    });
+    const [pricture, setImage] = useState([]);
     const [error, setError] = useState([]);
+
+    const fetchCategories = async () => {
+        axios.get(`/categories`).then((res) => {
+            if (res.status === 200) {
+                setCat(res.data.data);
+            }
+        })
+    }
+
+    useEffect(() => {
+        fetchCategories();
+    }, [])
 
     const handleInput = (e) => {
         e.persist();
@@ -34,17 +50,19 @@ function CreatePhone()
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('img', images.img);
+        formData.append('img', pricture.img); 
+        formData.append('category_id', phoneInput.category_id);
         formData.append('name', phoneInput.name);
+        formData.append('slug', phoneInput.slug);
         formData.append('description', phoneInput.description);
-        formData.append('price', phoneInput.price);
+        formData.append('sell_price', phoneInput.sell_price);
+        formData.append('original_price', phoneInput.original_price);
+        formData.append('quantity', phoneInput.quantity);
+
 
         axios.post(`/phones`, formData).then((res) => {
-
             if (res.status === 200) {
-
                 localStorage.setItem('auth_token', res.data.data.token);
-
                 swal.fire({
                     icon: 'success',
                     title: res.data.message,
@@ -83,7 +101,28 @@ function CreatePhone()
                                         </h3>
                                     </div>
                                     <div className="card-body">
-                                        <form id="phone_form" encType="multipart/form-data">
+                                    <form id="phone_form" encType="multipart/form-data">
+                                            <div className="mb-3 row">
+                                                <label className="col-sm-3 col-form-label">
+                                                    <strong>Category :</strong>
+                                            </label>
+                                            <div className="col-sm-9">
+                                                <select
+                                                    className="form-control"
+                                                    name="category_id"
+                                                    onChange={handleInput}
+                                                    value={phoneInput.category_id}
+                                                >
+                                                    <option disabled>Select Category</option>
+                                                    {category.map((cat) => {
+                                                        return (
+                                                            <option value={cat.id} key={cat.id}>{ cat.name }</option>
+                                                        );
+                                                    })}
+                                                    
+                                                </select>
+                                            </div>
+                                            </div>
                                             <div className="mb-3 row">
                                                 <label className="col-sm-3 col-form-label">
                                                     <strong>Product Name :</strong>
@@ -99,23 +138,69 @@ function CreatePhone()
                                                      <small className="text-danger">{ error.name }</small>
                                                 </div>
                                                
+                                        </div>
+                                        <div className="mb-3 row">
+                                                <label className="col-sm-3 col-form-label">
+                                                    <strong>Product Slug :</strong>
+                                                </label>
+                                                <div className="col-sm-9">
+                                                    <input
+                                                        type="text"
+                                                        name="slug"
+                                                        value={phoneInput.slug}
+                                                        onChange={ handleInput }
+                                                        className="form-control"
+                                                    />
+                                                     <small className="text-danger">{ error.slug }</small>
+                                                </div>
+                                               
                                             </div>
                                             <div className="mb-3 row">
                                                 <label className="col-sm-3 col-form-label">
-                                                    <strong>Price :</strong>
+                                                    <strong>Sell Price :</strong>
                                                 </label>
                                                 <div className="col-sm-9">
                                                     <input
                                                         type="number"
-                                                        name="price"
-                                                        value={phoneInput.price}
+                                                        name="sell_price"
+                                                        value={phoneInput.sell_price}
                                                         onChange={ handleInput }
                                                         className="form-control"
                                                     />
-                                                    <small className="text-danger">{ error.price }</small>
+                                                    <small className="text-danger">{ error.sell_price }</small>
                                                 </div>
                                             </div>
                                             <div className="mb-3 row">
+                                                    <label className="col-sm-3 col-form-label">
+                                                        <strong>Original Price :</strong>
+                                                    </label>
+                                                    <div className="col-sm-9">
+                                                        <input
+                                                            type="number"
+                                                            name="original_price"
+                                                            value={phoneInput.original_price}
+                                                            onChange={ handleInput }
+                                                            className="form-control"
+                                                        />
+                                                        <small className="text-danger">{ error.original_price }</small>
+                                                    </div>
+                                        </div>
+                                            <div className="mb-3 row">
+                                                <label className="col-sm-3 col-form-label">
+                                                    <strong>Quantity :</strong>
+                                                </label>
+                                                <div className="col-sm-9">
+                                                    <input
+                                                        type="number"
+                                                        name="quantity"
+                                                        value={phoneInput.quantity}
+                                                        onChange={ handleInput }
+                                                        className="form-control"
+                                                    />
+                                                    <small className="text-danger">{ error.quantity }</small>
+                                                </div>
+                                            </div>
+                                                <div className="mb-3 row">
                                                 <label className="col-sm-3 col-form-label">
                                                     <strong>Description :</strong>
                                                 </label>
@@ -138,8 +223,8 @@ function CreatePhone()
                                                 <div className="col-sm-9">
                                                     <input
                                                         type="file"
-                                                            name="img"
-                                                            id="imageForm"
+                                                        name="img"
+                                                        id="imageForm"
                                                         onChange={ handleImageInput }
                                                         className="form-control"
                                                     />

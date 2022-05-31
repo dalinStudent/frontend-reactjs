@@ -15,8 +15,12 @@ function EditPhone()
     
     const [phoneInput, setPhone] = useState({
         name: '',
+        slug:'',
         description: '',
-        price: '',
+        sell_price: '',
+        original_price: '',
+        img: '',
+        quantity: '',
     });
 
     const [images, setImage] = useState([]);
@@ -49,29 +53,40 @@ function EditPhone()
         e.preventDefault();
 
         const formData = new FormData();
+        formData.append('_method', 'PUT');
         formData.append('img', images.img);
         formData.append('name', phoneInput.name);
         formData.append('description', phoneInput.description);
-        formData.append('price', phoneInput.price);
+        formData.append('sell_price', phoneInput.sell_price);
+        formData.append('original_price', phoneInput.original_price);
+        formData.append('quantity', phoneInput.quantity);
+
+        const data = formData;
     
-        axios.put(`/phones/${id}`, formData).then((res) => {
-            
-
+        axios.put(`/phones/${id}`, data).then((res) => {
             if (res.status === 200) {
-
                 localStorage.setItem('auth_token', res.data.data.token);
+                    swal.fire({
+                        icon: 'success',
+                        title: res.data.message,
+                        showConfirmButton: true,
+                    });
 
+                    setError([]);
+                    navigate("/admin/phones");
+                    }
+                    console.log('update', res.data)
+            })
+            .catch(({ response }) => {
+            if(response.status===422){
+                setError(response.data.errors)
+            }else{
                 swal.fire({
-                    icon: 'success',
-                    title: res.data.message,
-                    showConfirmButton: true,
-                });
-
-                setError([]);
-                navigate("/admin/phones");
-            }
-            console.log('update', res.data)
-        })
+                text:response.data.message,
+                icon:"error"
+            })
+        }
+    })
 
     }
 
@@ -98,7 +113,24 @@ function EditPhone()
                                         Update Information
                                         <Link to="/admin/phones" className="btn btn-secondary float-end">Back</Link>
                                         </h3>
-                                    </div>
+                                </div>
+                                    {
+                                    Object.keys(error).length > 0 && (
+                                        <div className="row">
+                                        <div className="col-12">
+                                            <div className="alert alert-danger">
+                                            <ul className="mb-0">
+                                                {
+                                                Object.entries(error).map(([key, value])=>(
+                                                    <li key={key}>{value}</li>   
+                                                ))
+                                                }
+                                            </ul>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    )
+                                    }
                                     <div className="card-body">
                                         <form id="phone_form" encType="multipart/form-data">
                                             <div className="mb-3 row">
@@ -119,17 +151,47 @@ function EditPhone()
                                             </div>
                                             <div className="mb-3 row">
                                                 <label className="col-sm-3 col-form-label">
-                                                    <strong>Price :</strong>
+                                                    <strong>Sell Price :</strong>
                                                 </label>
                                                 <div className="col-sm-9">
                                                     <input
                                                         type="number"
-                                                        name="price"
-                                                        value={phoneInput.price}
+                                                        name="sell_price"
+                                                        value={phoneInput.sell_price}
                                                         onChange={ handleInput }
                                                         className="form-control"
                                                     />
-                                                    <small className="text-danger"></small>
+                                                    <small className="text-danger">{ error.sell_price }</small>
+                                                </div>
+                                            </div>
+                                            <div className="mb-3 row">
+                                                    <label className="col-sm-3 col-form-label">
+                                                        <strong>Original Price :</strong>
+                                                    </label>
+                                                    <div className="col-sm-9">
+                                                        <input
+                                                            type="number"
+                                                            name="original_price"
+                                                            value={phoneInput.original_price}
+                                                            onChange={ handleInput }
+                                                            className="form-control"
+                                                        />
+                                                        <small className="text-danger">{ error.original_price }</small>
+                                                    </div>
+                                        </div>
+                                        <div className="mb-3 row">
+                                                <label className="col-sm-3 col-form-label">
+                                                    <strong>Quantity :</strong>
+                                                </label>
+                                                <div className="col-sm-9">
+                                                    <input
+                                                        type="number"
+                                                        name="quantity"
+                                                        value={phoneInput.quantity}
+                                                        onChange={ handleInput }
+                                                        className="form-control"
+                                                    />
+                                                    <small className="text-danger">{ error.quantity }</small>
                                                 </div>
                                             </div>
                                             <div className="mb-3 row">
@@ -160,7 +222,7 @@ function EditPhone()
                                                         onChange={ handleImageInput }
                                                         className="form-control"
                                                     />
-                                                    <img src={`${phoneInput.img}`} width="150px" className="mt-3"/>
+                                                    <img src={`http://localhost:8000/${phoneInput.img}`} width="150px" className="mt-3"/>
                                                     <small className="text-danger"></small>
                                                 </div>
                                             </div>

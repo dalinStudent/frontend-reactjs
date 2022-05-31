@@ -27,7 +27,6 @@ class Login extends Component {
             axios
                 .post(`/login`, this.state.loginData)
                 .then((response) => {
-                    console.log('res', response)
                     if (response.status === 200 && response.data.data.user.is_admin === 1) {
                         localStorage.setItem('auth_token', response.data.data.token);
                         localStorage.setItem('auth_user', response.data.data.user.email);

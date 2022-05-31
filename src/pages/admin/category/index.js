@@ -1,85 +1,75 @@
-import React, { forwardRef, useEffect, useState } from "react";
-import Navbar from "../../../layouts/admin/Navbar";
-import Sidebar from "../../../layouts/admin/Sidebar";
-import Footer from "../../../layouts/admin/Footer";
-import '../../../assets/admin/css/styles.css'
-import '../../../assets/admin/js/scripts'
-import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import Footer from "../../../layouts/admin/Footer";
+import Sidebar from "../../../layouts/admin/Sidebar";
+import Navbar from "../../../layouts/client/Navbar";
 
-function ListPhone() {
-
+function ListCategory() {
     const [isLoading, setLoading] = useState(true);
-    const [phoneList, setPhoneList] = useState([]);
+    const [categoryList, setCategoryList] = useState([]);
 
-    const fetchPhone = async () => {
-       axios.get(`/phones`).then((response) => {
+    const fetchCategories = async () => {
+       axios.get(`/categories`).then((response) => {
+            console.log('res', response.data.data)
             if (response.status === 200) {
-                setPhoneList(response.data.data)
+                setCategoryList(response.data.data)
             }
             setLoading(false);
         })
     } 
    
     useEffect(() => {
-        fetchPhone();
+        fetchCategories();
     }, []);
 
     var viewPhone_HTMLTABLE = "";
 
     if (isLoading) {
-        return <h3>Loading Phone...</h3>
+        return <h3>Loading Categories...</h3>
     } else {
         viewPhone_HTMLTABLE = 
-            phoneList.map((item) => {
+            categoryList.map((item) => {
                 return (
                     <tr key={item.id}>
                         <td>{item.id}</td>
-                        <td>
-                            <span className="badge btn-sm btn-danger badge-pil">{item.category.name}</span>
-                        </td>
                         <td>{item.name}</td>
-                        <td>{item.sell_price}</td>
-                        <td>{item.original_price}</td>
-                        <td>$</td>
+                        <td>{item.slug}</td>
+                        <td>{item.status}</td>
                         <td>
-                            
-                            <Link to={`view/${item.id}`} className="btn btn-primary btn-sm">View</Link>
-                            &nbsp;
                             <Link to={`edit/${item.id}`} className="btn btn-success btn-sm">Update</Link>
                             &nbsp;
-                            <button to={`delete/${item.id}`} onClick={() => deletePhone(item.id)} className="btn btn-danger btn-sm">Delete</button>
+                            <button to={`delete/${item.id}`} onClick={() => deleteCategories(item.id)} className="btn btn-danger btn-sm">Delete</button>
                         </td>
                     </tr>
                 )
             })
     }
-    
 
-    const deletePhone = async (id) => {
-        const isConfirm = await Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!' 
-          }).then((result) => {
-            return result.isConfirmed
-          });
+        const deleteCategories = async (id) => {
+            const isConfirm = await Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                return result.isConfirmed
+            });
 
           if(!isConfirm){
             return;
           }
 
-          await axios.delete(`/phones/${id}`).then(({data})=>{
+          await axios.delete(`/categories/${id}`).then(({data})=>{
             Swal.fire({
                 icon:"success",
                 text:data.message
             })
-              fetchPhone();
+              fetchCategories();
           }).catch(({response:{data}})=>{
             Swal.fire({
                 text:data.message,
@@ -104,21 +94,19 @@ function ListPhone() {
                             <div className="card">
                                 <div className="card-header">
                                     <h3>
-                                        Phone List
+                                        Categories List
                                     </h3>
                                 </div>
                                 <div className="card-body">
-                                    <Link to="/admin/phones/create" className="btn btn-info btn-sm float-end mb-2">Create New Phone</Link>
+                                    <Link to="/admin/categories/create" className="btn btn-outline-primary btn-sm float-end mb-2">Create New Category</Link>
                     
                                     <table className="table table-bordered table-stripe text-center">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Category Name</th>
-                                                <th>Name</th>
-                                                <th>Sell Price</th>
-                                                <th>Original Price</th>
-                                                <th>Currency</th>
+                                                <th>Name</th>   
+                                                <th>Slug</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -138,6 +126,7 @@ function ListPhone() {
         </div>
         
     )
+    
 }
 
-export default ListPhone;
+export default ListCategory;
