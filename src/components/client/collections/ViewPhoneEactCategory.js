@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import Footer from "../../../layouts/client/Footer";
 import Navbar from "../../../layouts/client/Navbar";
 
 const styles = {

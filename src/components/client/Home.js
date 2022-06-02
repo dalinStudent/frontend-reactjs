@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Footer from "../../layouts/client/Footer";
 import Navbar from "../../layouts/client/Navbar";
 
 const styles = {
@@ -70,12 +71,14 @@ function Home() {
               <h6 style={styles.h6}>
                 <s>{phone.original_price}</s> $ &nbsp; {phone.sell_price} $
               </h6>
-              <h6></h6>
-              <button className="btn btn-success btn-sm">Add To Cart</button>
+              <span className="float-end badge btn-sm btn-primary badge-pil">
+                {phone.category.name}
+              </span>
             </div>
           );
         })}
       </div>
+      <Footer />
     </div>
   );
 }

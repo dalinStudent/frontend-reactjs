@@ -34,7 +34,6 @@ function Cart() {
     let isMounted = true;
 
     axios.get(`/orders/view-cart`).then((res) => {
-      console.log("cart", res.data);
       if (isMounted) {
         if (res.status === 200) {
           setCart(res.data.cart);
@@ -120,74 +119,93 @@ function Cart() {
   var CART_HTML = "";
   if (cart.length > 0) {
     CART_HTML = (
-      <div className="table-responsive">
-        <table className="table table-bordered table-stripe">
-          <thead>
-            <tr>
-              <th>Image</th>
-              <th>Phone Name</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Total Price</th>
-              <th>Currency</th>
-              <th>Remove</th>
-            </tr>
-          </thead>
+      <div>
+        <div className="table-responsive">
+          <table className="table table-bordered table-stripe">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Phone Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Currency</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {cart.map((item, idx) => {
-              totalPrice += item.phone.sell_price * item.quantity;
-              return (
-                <tr key={idx}>
-                  <td width="10%">
-                    <img
-                      src={`http://localhost:8000/${item.phone.img}`}
-                      alt=""
-                      style={styles.img}
-                    />
-                  </td>
-                  <td>{item.phone.name}</td>
-                  <td width="15%" className="text-center">
-                    {item.phone.sell_price}
-                  </td>
+            <tbody>
+              {cart.map((item, idx) => {
+                totalPrice += item.phone.sell_price * item.quantity;
+                return (
+                  <tr key={idx}>
+                    <td width="10%">
+                      <img
+                        src={`http://localhost:8000/${item.phone.img}`}
+                        alt=""
+                        style={styles.img}
+                      />
+                    </td>
+                    <td>{item.phone.name}</td>
+                    <td width="15%" className="text-center">
+                      {item.phone.sell_price}
+                    </td>
 
-                  <td width="15%" className="input-group">
-                    <button
-                      type="button"
-                      onClick={() => handleDecrement(item.id)}
-                      className="input-group-text"
-                    >
-                      -
-                    </button>
-                    <div className="form-control text-center">
-                      {item.quantity}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleIncrement(item.id)}
-                      className="input-group-text"
-                    >
-                      +
-                    </button>
-                  </td>
-                  <td width="15%" className="text-center">
-                    {item.phone.sell_price * item.quantity}
-                  </td>
-                  <td>$</td>
-                  <td width="10%">
-                    <button
-                      type="button"
-                      onClick={(e) => removeCartItem(e, item.id)}
-                      className="btn btn-danger btn-sm"
-                    >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    <td width="15%" className="input-group">
+                      <button
+                        type="button"
+                        onClick={() => handleDecrement(item.id)}
+                        className="input-group-text"
+                      >
+                        -
+                      </button>
+                      <div className="form-control text-center">
+                        {item.quantity}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleIncrement(item.id)}
+                        className="input-group-text"
+                      >
+                        +
+                      </button>
+                    </td>
+                    <td width="15%" className="text-center">
+                      {item.phone.sell_price * item.quantity}
+                    </td>
+                    <td>$</td>
+                    <td width="10%">
+                      <button
+                        type="button"
+                        onClick={(e) => removeCartItem(e, item.id)}
+                        className="btn btn-danger btn-sm"
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div className="col-md-8"></div>
+        <div className="col-md-4">
+          <div className="card card-body mt-3">
+            <h4>
+              Sub Total:
+              <span className="float-end text-danger">{totalPrice} $</span>
+            </h4>
+            <h4>
+              Grand Total:
+              <span className="float-end text-danger">{totalPrice} $</span>
+            </h4>
+            <hr />
+            <Link to="/checkout" className="btn btn-primary">
+              Checkout
+            </Link>
+          </div>
+        </div>
       </div>
     );
   } else {
@@ -216,23 +234,7 @@ function Cart() {
         <div className="container mt-5">
           <div className="row mb-3">
             <div className="col-md-12">{CART_HTML}</div>
-            <div className="col-md-8"></div>
-            <div className="col-md-4">
-              <div className="card card-body mt-3">
-                <h4>
-                  Sub Total:
-                  <span className="float-end text-danger">{totalPrice} $</span>
-                </h4>
-                <h4>
-                  Grand Total:
-                  <span className="float-end text-danger">{totalPrice} $</span>
-                </h4>
-                <hr />
-                <Link to="/checkout" className="btn btn-primary">
-                  Checkout
-                </Link>
-              </div>
-            </div>
+            
           </div>
         </div>
       </div>

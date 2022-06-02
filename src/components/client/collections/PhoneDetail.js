@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import Footer from "../../../layouts/client/Footer";
 import Navbar from "../../../layouts/client/Navbar";
 
 const styles = {
@@ -59,10 +60,7 @@ function PhoneDetail() {
       phone_id: phone.id,
       quantity: quantity,
     };
-    console.log("data", data);
-
     axios.post(`/orders/add-cart`, data).then((res) => {
-      console.log("res", res.data);
       if (res.data.status === 200) {
         setPhone(res.data.data);
         Swal.fire({
@@ -70,6 +68,7 @@ function PhoneDetail() {
           title: res.data.message,
           showConfirmButton: true,
         });
+        navigate("/view-cart");
       } else if (res.data.status === 409) {
         Swal.fire({
           icon: "warning",
@@ -84,13 +83,6 @@ function PhoneDetail() {
         });
         navigate("/login");
       }
-      // else if (res.data.status === 404) {
-      //     Swal.fire({
-      //         icon: 'error',
-      //         title: res.data.message,
-      //         showConfirmButton: true,
-      //     });
-      // }
     });
   };
 
